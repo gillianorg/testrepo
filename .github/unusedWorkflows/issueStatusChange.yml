@@ -1,0 +1,23 @@
+name: Issue Status Change
+on:
+  issues:
+    types: [opened, labeled]
+
+jobs:
+  evaluate_issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if the label matches "ProductBoard"
+        id: check_label
+        run: echo "::set-output name=match::${{ contains(github.event.issue.labels.*.name, 'ProductBoard') }}"
+      - name: Update issue status to "Done"
+        if: steps.check_label.outputs.match == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        run: |
+          issue_number=${{ github.event.issue.number }}
+          project_number=1 
+          column_name="Done" 
+          echo "got here https://api.github.com/projects/columns/$column_name/cards and issue number $issue_number"
+          response=$(curl -X POST -s -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3+json" "https://api.github.com/projects/columns/$column_name/cards" -d "{\"content_id\": $issue_number, \"content_type\": \"Issue\"}")
+          echo "$response"

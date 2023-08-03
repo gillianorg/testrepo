@@ -1,4 +1,4 @@
-name: GraphQL Mutation 2
+name: gilliantest
 
 on:
   issues:
@@ -6,7 +6,7 @@ on:
       - assigned
 
 jobs:
-  graphql_mutation2:
+  gilliantest:
     runs-on: ubuntu-latest
 
     steps:

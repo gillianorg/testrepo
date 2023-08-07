@@ -11,13 +11,13 @@ jobs:
       - uses: actions/checkout@v2
       - uses: austenstone/project-add@main
         with:
-          user: leapinleprechaun
+          organization: gillianorg
           project-number: 1
           github-token: "${{ secrets.PROJECT_PAT }}"
         id: project-add
       - uses: austenstone/project-update@main
         with:
-          user: leapinleprechaun
+          organization: gillianorg
           project-number: 1
           github-token: "${{ secrets.PROJECT_PAT }}"
           item-id: ${{ steps.project-add.outputs.id }}

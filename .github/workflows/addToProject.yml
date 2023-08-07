@@ -8,7 +8,6 @@ jobs:
     name: Add to Project
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
       - uses: austenstone/project-add@main
         with:
           organization: gillianorg

@@ -1,0 +1,14 @@
+name: Github Context
+
+on:
+  issues:
+    types:
+      - assigned
+
+jobs:
+  github_context:
+    runs-on: ubuntu-latest
+    steps:
+    - name: "dump github context"
+      run: echo '${{ toJSON(github.event) }} | jq
+      shell:bash

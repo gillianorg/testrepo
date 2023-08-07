@@ -14,5 +14,6 @@ jobs:
         with:
           fields: select
           github_token: ${{ secrets.PROJECT_PAT }}
-          project_url: https://github.com/users/gillianorg/projects/1
+          project_url: https://github.com/orgs/gillianorg/projects/1
+          resource_url: ${{ github.event.issue.html_url }} 
       - run: echo ${{ steps.fields.outputs.values }}

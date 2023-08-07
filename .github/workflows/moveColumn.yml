@@ -10,6 +10,6 @@ jobs:
     steps:
       - uses: alex-page/github-project-automation-plus@v0.8.3
         with:
-          project: "test workflows"
+          project: 1
           column: Todo
           repo-token: ${{ secrets.PROJECT_PAT }}

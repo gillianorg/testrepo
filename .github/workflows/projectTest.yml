@@ -15,4 +15,4 @@ jobs:
           fields: text,number,date,select
           github_token: ${{ secrets.PROJECT_PAT }}
           project_url: https://github.com/orgs/gillianorg/projects/1
-      - run: echo ${{ steps.fields }}
+      - run: echo ${{ toJSON(steps.fields) }}

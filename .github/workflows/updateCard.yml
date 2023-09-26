@@ -19,7 +19,7 @@ jobs:
             try {
               const issueId = context.payload.issue.id;
               console.log(context.payload)
-              const projectId = context.payload.project_card.project_id;
+              const projectId = 1;
               const mutation = `
                 mutation updateCard($issueId: ID!, $projectId: ID!, $newStatus: String!) {
                   updateProjectCard(input: {projectColumnId: $projectId, contentId: $issueId, state: $newStatus}) {

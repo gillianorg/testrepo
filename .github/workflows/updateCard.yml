@@ -1,64 +1,30 @@
-name: Update issue status in project board
+name: Update Card Status
 
 on:
   issues:
     types: [opened]
 
 jobs:
-  updateIssueStatus:
+  update-card-status:
     runs-on: ubuntu-latest
     steps:
-      - name: Update issue status
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Update card status
         uses: actions/github-script@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const axios = require('axios');
-
-            try {
-              // Get the necessary inputs from the user
-              const cardId = core.getInput('card-id');
-              const newStatus = core.getInput('new-status');
-
-              // Authenticate with GitHub
-              const token = process.env.GITHUB_TOKEN;
-              const octokit = github.getOctokit(token);
-
-              // Get the necessary information about the repository and project board
-              const context = github.context;
-              const owner = context.payload.repository.owner.login;
-              const repo = context.payload.repository.name;
-              const projectId = context.payload.project_card.project_id;
-
-              // Define the GraphQL mutation to update the status of a card
-              const mutation = `
-                mutation updateCard($cardId: ID!, $newStatus: String!) {
-                  updateProjectCard(input: {id: $cardId, state: $newStatus}) {
-                    clientMutationId
-                  }
+            const issueId = context.payload.issue.id;
+            const projectId = context.payload.project_card.project_id;
+            const mutation = `
+              mutation updateCard($issueId: ID!, $projectId: ID!, $newStatus: String!) {
+                updateProjectCard(input: {projectColumnId: $projectId, contentId: $issueId, state: $newStatus}) {
+                  clientMutationId
                 }
-              `;
-
-              // Send the GraphQL mutation to update the status of the card
-              axios({
-                url: `https://api.github.com/graphql`,
-                method: 'post',
-                headers: {
-                  'Authorization': `Bearer ${token}`,
-                  'Accept': 'application/vnd.github.inertia-preview+json'
-                },
-                data: {
-                  query: mutation,
-                  variables: {
-                    cardId: cardId,
-                    newStatus: newStatus
-                  }
-                }
-              }).then(response => {
-                console.log(response.data);
-              }).catch(error => {
-                console.log(error);
-              });
-            } catch (error) {
-              console.log(error);
-            }
+              }
+            `;
+            const variables = { issueId, projectId, newStatus: 'In Progress' };
+            const result = await github.graphql(mutation, variables);
+            console.log(result);

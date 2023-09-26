@@ -16,15 +16,21 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const issueId = context.payload.issue.id;
-            const projectId = context.payload.project_card.project_id;
-            const mutation = `
-              mutation updateCard($issueId: ID!, $projectId: ID!, $newStatus: String!) {
-                updateProjectCard(input: {projectColumnId: $projectId, contentId: $issueId, state: $newStatus}) {
-                  clientMutationId
+            try {
+              const issueId = context.payload.issue.id;
+              console.log(context.payload)
+              const projectId = context.payload.project_card.project_id;
+              const mutation = `
+                mutation updateCard($issueId: ID!, $projectId: ID!, $newStatus: String!) {
+                  updateProjectCard(input: {projectColumnId: $projectId, contentId: $issueId, state: $newStatus}) {
+                    clientMutationId
+                  }
                 }
-              }
-            `;
-            const variables = { issueId, projectId, newStatus: 'In Progress' };
-            const result = await github.graphql(mutation, variables);
-            console.log(result);
+              `;
+              const variables = { issueId, projectId, newStatus: 'In Progress' };
+              const result = await github.graphql(mutation, variables);
+              console.log(result);
+            }
+            catch (err){
+              console.log(err)
+            }
